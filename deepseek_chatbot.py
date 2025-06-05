@@ -33,7 +33,7 @@ st.markdown("""
 # Sidebar Configuration
 with st.sidebar:
     st.header("⚙️ Settings")
-    api_key = st.text_input("DeepSeek API Key", type="password", help="Enter your DeepSeek R1 API Key")
+    api_key = st.secrets["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"]
     model = st.selectbox("Choose Model", ["deepseek-chat", "deepseek-coder"])
     if st.button("🗑️ Clear Chat History"):
         st.session_state.messages = [{"role": "system", "content": "You are a helpful assistant."}]
