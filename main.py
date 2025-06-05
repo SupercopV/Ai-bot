@@ -14,7 +14,7 @@ client = OpenAI(
     api_key=api_key,
     default_headers={
         "HTTP-Referer": "https://atele-x.streamlit.app",
-        "X-Title": "DeepSeek Chatbot"
+        "X-Title": "main"
     }
 )
 
