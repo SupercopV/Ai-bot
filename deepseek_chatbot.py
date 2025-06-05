@@ -33,7 +33,7 @@ st.markdown("""
 # Sidebar Configuration
 with st.sidebar:
     st.header("⚙️ Settings")
-    api_key = st.text_input("OpenRouter API Key", type="password", help="Enter your sk-or-v1... API Key")
+    api_key = st.secrets.get("API_KEY")
     model = st.selectbox("Choose Model", ["deepseek-chat", "deepseek-coder"])
     if st.button("🗑️ Clear Chat History"):
         st.session_state.messages = [{"role": "system", "content": "You are a helpful assistant."}]
