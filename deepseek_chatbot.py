@@ -37,7 +37,7 @@ with st.sidebar:
     model = st.selectbox("Choose Model", ["deepseek-chat", "deepseek-coder"])
     if st.button("🗑️ Clear Chat History"):
         st.session_state.messages = [{"role": "system", "content": "You are a helpful assistant."}]
-        st.experimental_rerun()
+        st.rerun()
 
 # Check API Key
 if not api_key:
