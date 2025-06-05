@@ -36,7 +36,7 @@ if prompt := st.chat_input("Type your message..."):
     headers = {
         "Authorization": f"Bearer {api_key}",
         "Content-Type": "application/json",
-        "HTTP-Referer": "https://your-app-name.streamlit.app",
+        "HTTP-Referer": "https://atele-x.streamlit.app",
         "X-Title": "DeepSeek Chatbot"
     }
 
