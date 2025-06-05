@@ -1,28 +1,23 @@
-
 import streamlit as st
 import requests
 
-st.set_page_config(page_title="DeepSeek Chatbot via OpenRouter", page_icon="💬")
+st.set_page_config(page_title="DeepSeek Chatbot", page_icon="💬")
 
 st.title("💬 DeepSeek Chatbot")
 st.markdown("Powered by [OpenRouter](https://openrouter.ai) + Streamlit")
 
-# Read API key from Streamlit secrets
+# Load secret
 api_key = st.secrets.get("API_KEY")
 
-if not api_key:
-    st.error("API key is missing! Please add it to Streamlit secrets.")
-    st.stop()
-
 # Choose model
-model = st.selectbox("Choose Model", ["deepseek-chat", "deepseek-coder"])
+model = st.selectbox("Choose Model", ["deepseek-chat"])
 
-# Chat history
+# Initialize chat
 if "messages" not in st.session_state:
-    st.session_state.messages = [{"role": "system", "content": "You are a helpful assistant."}]
+    st.session_state.messages = []
 
 # Display messages
-for msg in st.session_state.messages[1:]:
+for msg in st.session_state.messages:
     with st.chat_message(msg["role"]):
         st.markdown(msg["content"])
 
@@ -32,26 +27,28 @@ if prompt := st.chat_input("Type your message..."):
     with st.chat_message("user"):
         st.markdown(prompt)
 
-    # Call OpenRouter API
+    # Prepare request
+    url = "https://openrouter.ai/api/v1/chat/completions"
     headers = {
         "Authorization": f"Bearer {api_key}",
         "Content-Type": "application/json",
         "HTTP-Referer": "https://atele-x.streamlit.app",
         "X-Title": "DeepSeek Chatbot"
     }
-
-    payload = {
+    data = {
         "model": model,
-        "messages": st.session_state.messages,
-        "temperature": 0.7
+        "messages": st.session_state.messages
     }
 
-    response = requests.post("https://openrouter.ai/api/v1/chat/completions", headers=headers, json=payload)
+    # Make request
+    try:
+        response = requests.post(url, headers=headers, json=data)
+        result = response.json()
+        reply = result["choices"][0]["message"]["content"]
+    except Exception as e:
+        reply = f"Error {response.status_code}: {result}"
 
-    if response.status_code == 200:
-        reply = response.json()["choices"][0]["message"]["content"]
-        st.session_state.messages.append({"role": "assistant", "content": reply})
-        with st.chat_message("assistant"):
-            st.markdown(reply)
-    else:
-        st.error(f"Error {response.status_code}: {response.text}")
+    # Display reply
+    st.session_state.messages.append({"role": "assistant", "content": reply})
+    with st.chat_message("assistant"):
+        st.markdown(reply)
